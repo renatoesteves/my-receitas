@@ -22,7 +22,7 @@
             <label for="slCategoria">Categoria</label>
             <select name="slCategoria" id="slCategoria" class="form-control">
                 {% for categoria in listaCategoria %}
-                <option value="{{categoria.id}}">{{categoria.titulo}}</option>
+                <option value="{{categoria.id}}" {{categoria.id ==  receita.categoriaId  ? 'selected' :  '' }}>{{categoria.titulo}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -46,7 +46,7 @@
     <div class="row">
         <div class="col-md-12 mt-3">
             <label for="txtDescricao">Conteúdo</label>
-            <textarea id="txtDescricao" name="txtDescricao">{{receita.descricao}}</textarea>
+            <textarea id="txtDescricao" name="txtDescricao">{{receita.descricao|raw}}</textarea>
         </div>
     </div>
     <div class="row mt-3">

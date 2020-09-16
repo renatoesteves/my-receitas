@@ -25,14 +25,14 @@
                         <a class="nav-link" href="{{BASE}}categoria/">Categorias</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{BASE}}receita/">Receitas</a>
+                        <a class="nav-link" href="{{BASE}}receita/main">Receitas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{BASE}}sobre/">Sobre</a>
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0" method="get" action="{{BASE}}pesquisa/" id="frmPesquisa" onsubmit="return pesquisar();">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Pesquisar" minlength="2" required name="txtPesquisa" id="txtPesquisa">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Pesquisar" minlength="2"  name="txtPesquisa" id="txtPesquisa" required>
                     <button class="btn btn-secondary my-2 my-sm-0" type="button" onclick="pesquisar();">Pesquisar</button>
                 </form>
             </div>

@@ -34,20 +34,71 @@ class ReceitaModel{
 
     public function alterar(Receita $receita)
     {
-        $sql = 'UPDATE receita SET titulo = :titulo ,slug = :slug ,linha_fina = :linha_fina ,descricao = :descricao ,categoria_id = :categoria_id WHERE id = :id';
+        $sql = 'UPDATE receita SET titulo = :titulo ,slug = :slug ,linha_fina = :linha_fina ,descricao = :descricao ,categoria_id = :categoriaid WHERE id = :id';
         $params = [
             ':id' => $receita->getId(),
             ':titulo' => $receita->getTitulo(),
             ':slug'=> $receita->getSlug(),
             ':linha_fina' => $receita->getLinhaFina(),
             ':descricao'=> $receita->getDescricao(),
-            ':categoria_id' => $receita->getCategoriaId()
+            ':categoriaid' => $receita->getCategoriaId()
         ];
 
         return $this->pdo->executeNonQuery($sql,$params);
             
     }
 
+    public function lerPorId(int $receitaId)
+    {
+        $sql = 'SELECT r.*, c.titulo as cattitulo FROM receita r INNER JOIN categoria c ON c.id = r.categoria_id  WHERE r.id = :id';
+        $dr= $this->pdo->executeQueryOneRow($sql,[ 
+            ':id' => $receitaId
+        ]);
+
+        return $this->collection($dr);
+    }
+
+    public function lerTodosPorCategoria(int $categoriaId)
+    {
+        $sql = 'SELECT r.*, c.titulo as cattitulo FROM receita r INNER JOIN categoria c ON c.id = r.categoria_id WHERE r.categoria_id = :categoriaid ORDER BY r.data DESC';
+        $dt= $this->pdo->executeQuery($sql,[ 
+            ':categoriaid' => $categoriaId
+        ]);
+            $lista = [];
+            foreach($dt as $dr)
+                $lista[] = $this->collection($dr);
+            return $lista;
+
+        // return $this->collection($dr);
+    }
+    public function pesquisar(string $termo)
+    {
+        $sql = 'SELECT r.*, c.titulo as cattitulo FROM receita r INNER JOIN categoria c ON c.id = r.categoria_id WHERE UPPER (r.titulo) LIKE :titulo OR UPPER (r.linha_fina) LIKE :linhafina ORDER BY r.titulo ASC';
+        $dt= $this->pdo->executeQuery($sql,[ 
+            ':titulo' => strtoupper("%{$termo}%"),
+            ':linhafina' => strtoupper("%{$termo}%")
+        ]);
+            $lista = [];
+            foreach($dt as $dr)
+                $lista[] = $this->collection($dr);
+            return $lista;
+
+        // return $this->collection($dr);
+    }
+    
+    public function lerUltimos($limit = 10)
+    {
+        $sql = 'SELECT r.*, c.titulo as cattitulo FROM receita r INNER JOIN categoria c ON c.id = r.categoria_id ORDER BY r.data DESC LIMIT  :limit';
+        $dt= $this->pdo->executeQuery($sql,[ 
+            ':limit' => $limit
+        ]);
+            $lista = [];
+            foreach($dt as $dr)
+                $lista[] = $this->collection($dr);
+            return $lista;
+
+    
+    }
 
     private function collection ($arr)
     {
@@ -56,32 +107,13 @@ class ReceitaModel{
         $receita->setTitulo($arr['titulo'] ?? null);
         $receita->setSlug($arr['slug'] ?? null);
         $receita->setLinhaFina($arr['linha_fina'] ?? null);
-        $receita->setDescricao($arr['descricao'] ?? null);
+        $receita->setDescricao(html_entity_decode($arr['descricao'] ?? null));
         $receita->setCategoriaId($arr['categoria_id'] ?? null);
         $receita->setCategoriaTitulo($arr['cattitulo'] ?? null);
         $receita->setData($arr['data'] ?? null);
         return $receita;
     }
 
-    public function lerPorId(int $receitaId)
-    {
-        $sql = 'SELECT * FROM receita WHERE id = :id';
-        $dr= $this->pdo->executeQueryOneRow($sql,[ 
-            ':id' => $receitaId
-        ]);
-    }
+    
 
-    public function lerPorCategoria(int $categoriaId)
-    {
-        $sql = 'SELECT r.*, c.titulo as cattitulo FROM receita r INNER JOIN categoria c ON c.id = r.categoria_id WHERE r.categoria_id = :categoriaid';
-        $dt= $this->pdo->executeQueryOneRow($sql,[ 
-            ':id' => $categoriaId
-        ]);
-            $lista = [];
-            foreach($dt as $dr)
-                $lista[] = $this->collection($dr);
-            return $lista;
-
-        return $this->collection($dr);
-    }
 }

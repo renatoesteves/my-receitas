@@ -13,6 +13,7 @@
                 <th>#ID</th>
                 <th>Nome</th>
                 <th>Slug</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -21,6 +22,7 @@
                 <td>{{categoria.id}}</td>
                 <td>{{categoria.titulo}}</td>
                 <td>{{categoria.slug}}</td>
+                
                 <td>
                     <a href="{{BASE}}categoria/editar/{{categoria.id}}" class="btn btn-warning">Editar</a>
                 </td>

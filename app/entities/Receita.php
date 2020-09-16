@@ -54,10 +54,10 @@ class Receita
         $this->data = $data;
     }
 
-    public function setThumb($thumb)
-    {
-        $this->thumb = $thumb;
-    }
+    // public function setThumb($thumb)
+    // {
+    //     $this->thumb = $thumb;
+    // }
 
     public function getId()
     {
@@ -99,8 +99,8 @@ class Receita
         return $this->data;
     }
 
-    public function getThumb()
-    {
-        return $this->thumb;
-    }
+    // public function getThumb()
+    // {
+    //     return $this->thumb;
+    // }
 }

@@ -1,28 +1,10 @@
 {% extends "partials/body.twig.php" %}
 
-{%block title%} Home - Receitas {%endblock%}
+{%block title%} Pesquisa -  Receitas {%endblock%}
 
 {% block body %}
-<h1> Receitas </h1>
-<a href="{{BASE}}receita/adicionar/" class="btn btn-primary">Nova Receita</a>
-<hr>
-
-<form action="{{BASE}}receita/" method="post">
-    <div class="row">
-        <div class="col-md-8">
-            <select name="slCategoria" id="slCategoria" class="form-control">
-                {% for categoria in listaCategoria %}
-                <option value="{{categoria.id}}" {{categoria.id == categoriaId ? 'selected' : '' }}>{{categoria.titulo}}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-4">
-            <input type="submit" value="Buscar" class="btn btn-success w-100">
-        </div>
-    </div>
-</form>
-<hr>
+<h1> Pesquisa </h1>
+<p>Exibindo <span class="font-weight-bold">{{quantidadeResultado}}</span> resultado(s) para o termo<span class="font-weight-bold">{{termo}}</span>.</p>
 <div class="overflow-auto">
     <table class="table table-hover">
         <thead>

@@ -19,19 +19,37 @@ class ReceitaController extends Controller
 
     public function index()
     {
-        $this->load('receita/main', []);
+
+        $receitas = [];
+
+        if (filter_input(INPUT_POST,  'slCategoria', FILTER_SANITIZE_NUMBER_INT)) {
+            $receitas = $this->receitaModel->lerTodosPorCategoria(
+                filter_input(INPUT_POST,  'slCategoria', FILTER_SANITIZE_NUMBER_INT)
+            );
+        } else {
+
+            $receitas = $this->receitaModel->lerUltimos(15);
+        }
+        
+        $this->load('receita/main', [
+            'listaCategoria' => (new CategoriaModel())->lerTodos(),
+            'receitas' => $receitas,
+            'categoriaId' => filter_input(INPUT_POST, 'slCategoria', FILTER_SANITIZE_NUMBER_INT)
+            
+        ]);
     }
+
     public function adicionar()
     {
         $this->load('receita/adicionar', [
             'listaCategoria' => (new CategoriaModel())->lerTodos()
         ]);
     }
-    
+
     public function editar($receitaId)
     {
         $receitaId = filter_var($receitaId, FILTER_SANITIZE_NUMBER_INT);
-        if($receitaId <= 0){
+        if ($receitaId <= 0) {
             $this->showMessage(
                 'Formulario inválido',
                 'Os dados fornecidos estao incompletos ou sao invalidos.',
@@ -41,6 +59,24 @@ class ReceitaController extends Controller
         }
         $this->load('receita/editar', [
             'listaCategoria' => (new CategoriaModel())->lerTodos(),
+            'receita' => $this->receitaModel->lerPorId($receitaId),
+            'receitaId' => $receitaId
+        ]);
+    }
+
+
+    public function ver($receitaId)
+    {
+        $receitaId = filter_var($receitaId, FILTER_SANITIZE_NUMBER_INT);
+        if ($receitaId <= 0) {
+            $this->showMessage(
+                'Formulario inválido',
+                'Os dados fornecidos estao incompletos ou sao invalidos.',
+                'artigo/',
+            );
+            return;
+        }
+        $this->load('receita/ver', [
             'receita' => $this->receitaModel->lerPorId($receitaId)
         ]);
     }
@@ -71,7 +107,7 @@ class ReceitaController extends Controller
     }
 
     public function alterar($receitaId)
-    {  
+    {
         $receita = $this->getInput();
         $receita->setId($receitaId);
 
@@ -93,7 +129,6 @@ class ReceitaController extends Controller
             );
         }
         redirect(BASE . 'receita/editar/' . $receitaId);
-
     }
 
     private function validar(Receita $receita, bool $validateId = true)

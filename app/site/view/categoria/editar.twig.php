@@ -16,7 +16,7 @@
 
         <div class="col-md-6">
             <label for="txtSlug">Slug</label>
-            <input type="text" id="txtSlug" name="txtSlug" class="form-control" placeholder="Slug aqui">
+            <input type="text" id="txtSlug" name="txtSlug" class="form-control" placeholder="Slug aqui" value="{{categoria.slug}}">
         </div>
             
     </div>
